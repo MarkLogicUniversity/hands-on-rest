@@ -1,0 +1,62 @@
+<export><workspace name="rest-read-documents"><query name="Read JSON" focus="true" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document
+// This script sends a GET request to retrieve a particular document.
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=/image/01.JPG.json',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    }
+  }
+);
+
+var headers = response.next();
+var content = response.next();
+
+response
+</query><query name="Read Binary" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document
+// This script sends a GET request to retrieve a particular document.
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=/binary/01.JPG',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    }
+  }
+);
+
+var headers = response.next();
+var content = response.next();
+
+response</query><query name="Read multiple" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document
+// This script sends a GET request to retrieve multiple documents.
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=/image/01.JPG.json&amp;uri=/image/02.JPG.json',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "multipart/mixed; boundary=BOUNDARY"
+    }
+  }
+);
+
+var headers = response.next();
+var content = response.next();
+
+String(content.value);
+</query><query name="Ex 1" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Task: Print the city where image 03.JPG was taken.
+//       Use the Promise method.
+// URI: /image/03.JPG.json
+// JSON path within document: location.city
+
+</query></workspace></export>
