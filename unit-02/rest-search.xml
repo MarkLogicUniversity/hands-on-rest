@@ -1,0 +1,267 @@
+<export><workspace name="rest-search"><query name="term search" focus="true" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain the word 'apple'.
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/search?q=apple',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="phrase search" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain the phrase 'iphone 4'.
+
+var query = encodeURI('"iphone 4"');
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/search?q=' + query,
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="string logical search" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain either "atlanta" or the phrase "san francisco".
+// The "OR" needs to be all caps to be interpreted as a logical or. 
+
+var query = encodeURI('atlanta OR "san francisco"');
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/search?q=' + query,
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="paging" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Get the second page of documents that contain the term "apple"
+
+var query = encodeURI('apple');
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/search?start=11&amp;q=' + query,
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="constraint search" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that contain have a city property with the value "San Francisco"
+
+var query = 'metro:"San Francisco"'
+
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/search',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+  {
+    "search": {
+      "qtext": query,
+      "options": { 
+        "constraint": [
+          {
+            "name": "metro",
+            "annotation": "Targets the city JSON property",
+            "value": {
+              "type": "string",
+              "json-property": "city"
+            }
+          }
+        ]
+      }
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="facet search" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that contain have the term apple. 
+// Return a country facet. 
+
+var query = 'apple'
+
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/search',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+  {
+    "search": {
+      "qtext": query,
+      "options": { 
+        "constraint": [
+          {
+            "name": "country",
+            "range": {
+              "facet": true,
+              "type": "xs:string",
+              "collation": "http://marklogic.com/collation/",
+              "json-property": "country",
+              "facet-option": [ "limit=10", "descending" ]
+            },
+          }
+        ]
+      }
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="structured query" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Use a structured query with a term-query and a value-query. 
+
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/search',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+  {
+    "search": {
+      "query": { 
+        "and-query": [
+          {
+            "term-query": {
+              "text": "san francisco"
+            }
+          },
+          {
+            "value-query": {
+              "json-property": "make",
+              "type": "string",
+              "text": "apple"
+            }
+          }
+        ]
+      },
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="qbe" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that have 'San Francisco' in the city property, using
+// Query-By-Example.
+
+// Other QBE tricks:
+//   qb.byExample({city: { $word: 'san'} }) -- look for 'san' as a word in the
+//     city property. Case insensitive.
+//   qb.byExample({reputation: { $gt: 100 } }) -- do a range comparison
+//   qb.byExample({$filtered: true}) -- turn on filtered search
+// Combine the above (AND semantics):
+//   qb.byExample({
+//     city: { $word: 'san'},
+//     reputation: { $gt: 100 },
+//     $filtered: true
+//   }) 
+
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/qbe',
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+  { 
+    "$query": {
+      "city": "San Francisco"
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="ex 1" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Write a query that finds pictures taken with "LGE" phones in Colombia.
+// Hint: you'll look in the "make" and "country" JSON properties.
+
+var endpoint = ''; // choose a search endpoint
+
+var response = xdmp.httpPost(
+  'http://localhost:5003' + endpoint,
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+  // add query here
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query></workspace></export>
