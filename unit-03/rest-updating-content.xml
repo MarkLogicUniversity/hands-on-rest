@@ -1,0 +1,338 @@
+<export><workspace name="rest-updating-content"><query name="Insert" focus="true" active="true" content-source="as:14059653400360071881:" mode="javascript">// Insert a document
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpPut(
+  'http://localhost:5003/v1/documents?uri=/test/mydoc1.json',
+  options,
+  {
+    "review": {
+      "make": "Samsung",
+      "model": "S5",
+      "content": "Pretty good."
+    }
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="Delete" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Delete a document
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpDelete(
+  'http://localhost:5003/v1/documents?uri=/test/mydoc1.json',
+  options
+)
+
+response</query><query name="Insert Multiple" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Insert multiple documents
+
+var projectDirectory = '/Users/dcassel/git/hands-on-rest/data/';
+
+var jsonDoc = xdmp.documentGet(projectDirectory + '20140721_144421b.jpg.json').next().value.root;
+var jpegDoc = xdmp.documentGet(projectDirectory + '20140721_144421b.jpg').next().value.root;
+
+var encoding = 
+  xdmp.multipartEncode(
+    'BOUNDARY',
+    [
+      {
+        "headers": {
+          "Content-Type":"application/json",
+          "Content-Disposition": 'attachment;filename="/image/20140721_144421b.jpg.json"'
+        },
+      },
+      {
+        "headers": {
+          "Content-Type":"image/jpeg",
+          "Content-Disposition": 'attachment;filename="/binary/20140721_144421b.jpg"'
+        }
+      }
+    ],
+    [
+      jsonDoc,
+      jpegDoc
+    ]
+  )
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "multipart/mixed; boundary=BOUNDARY",
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpPost(
+  'http://localhost:8000/v1/documents',
+  options,
+  encoding
+)
+
+response</query><query name="Update Content" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Update a document -- insert a "state" property after /location/city
+// See JSON Patch reference: http://docs.marklogic.com/guide/rest-dev/documents#id_84854
+// 
+// Note that there is no xdmp.httpPatch(), so we're calling xdmp.httpPost() and sending
+// the header "X-HTTP-Method-Override": "PATCH". If you can send a PATCH request, you 
+// don't need that header. Compare:
+//   /v1/documents PATCH: http://docs.marklogic.com/REST/PATCH/v1/documents
+//   /v1/documents POST:  http://docs.marklogic.com/REST/POST/v1/documents@uri=[db-uri]
+
+var patch = 
+  {
+    "insert": {
+      "context": "/location/city",
+      "position": "after",
+      "content": { state: 'Maine' }
+    }
+  };
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "X-HTTP-Method-Override": "PATCH",
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json',
+  options,
+  patch
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="Read Metadata" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Lookup collections, permissions, properties, and quality for a document
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json&amp;category=metadata',
+  options
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="Update Metadata" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Add a document to a collection
+
+var uri = '/image/20140721_144421b.jpg.json';
+var category = 'collections';
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpPut(
+  'http://localhost:5003/v1/documents?uri=' + uri + '&amp;category=' + category,
+  options,
+  {
+    "collections": [
+      "image",
+      "phone"
+    ]
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="Ex 1" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Exercise:
+// Rerun the Insert buffer before doing this exercise.
+//
+// The Geophoto application lets us provide a title for a picture. Add a title
+// property with the value "Portland Head Lighthouse". This should be a child
+// of the root element. When you're done, '/image/20140721_144421b.jpg.json'
+// should look like this:
+// {
+//   "originalFilename":"../data/photos/20140721_144421b.jpg",
+//   "filename":"20140721_144421b.jpg",
+//   "binary":"/binary/20140721_144421b.jpg",
+//   "make":"SAMSUNG",
+//   "model":"SAMSUNG-SM-G900A",
+//   "created":1405968260000,
+//   "location":{
+//     "type":"Point",
+//     "coordinates":[43.6231, -70.208058],
+//     "city":"Cape Elizabeth",
+//     "state": "Maine",
+//     "country":"United States"
+//   },
+//   "title":"Portland Head Lighthouse"
+// }
+//
+// After completing the exercise, you can look at the image in the Geophoto
+// application and see the title.
+
+// See the JSON Patch reference: http://docs.marklogic.com/guide/rest-dev/documents#id_84854
+var patch = 
+  {
+  };
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "X-HTTP-Method-Override": "PATCH",
+      "Accept": "application/json"
+    }
+  };
+
+var uri = '/image/20140721_144421b.jpg.json';
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json',
+  options,
+  patch
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="Ex 2" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Exercise:
+//
+// The image we inserted with the Insert buffer describes the camera used to
+// take the picture. In this exercise, we'll change the model. In the original
+// document, the model is "SAMSUNG-SM-G900A". Change it to "Galaxy S5".
+//
+// {
+//   "originalFilename":"../data/photos/20140721_144421b.jpg",
+//   "filename":"20140721_144421b.jpg",
+//   "binary":"/binary/20140721_144421b.jpg",
+//   "make":"SAMSUNG",
+//   "model":"Galaxy S5",
+//   "created":1405968260000,
+//   "location":{
+//     "type":"Point",
+//     "coordinates":[43.6231, -70.208058],
+//     "city":"Cape Elizabeth",
+//     "state": "Maine",
+//     "country":"United States"
+//   },
+//   "title":"Portland Head Lighthouse"
+// }
+//
+// After completing the exercise, you can look at the image in the Geophoto
+// application and see the new make.
+
+// See the JSON Patch reference: http://docs.marklogic.com/guide/rest-dev/documents#id_84854
+var patch = 
+  {
+  };
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "X-HTTP-Method-Override": "PATCH",
+      "Accept": "application/json"
+    }
+  };
+
+var uri = '/image/20140721_144421b.jpg.json';
+var response = xdmp.httpPost(
+  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json',
+  options,
+  patch
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query><query name="Ex 3" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Exercise:
+// Rerun the Update Metadata buffer before doing this exercise.
+//
+// In Update Metadata, '/image/20140721_144421b.jpg.json' was added
+// to the 'phone' collection. Now remove it from that collection.
+
+var uri = '/image/20140721_144421b.jpg.json';
+var category = 'collections';
+
+var options = 
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+var response = xdmp.httpPut(
+  'http://localhost:5003/v1/documents?uri=' + uri + '&amp;category=' + category,
+  options,
+  {
+    // SPECIFY REQUEST BODY HERE
+  }
+)
+
+headers = response.next().value
+content = response.next().value
+
+response</query></workspace></export>
