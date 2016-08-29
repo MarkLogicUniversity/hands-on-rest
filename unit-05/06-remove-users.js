@@ -1,4 +1,4 @@
-// Create the users that will be used for this unit.
+// Remove the users that were created for this unit
 
 var fs = require('fs');
 var bPromise = require('bluebird');

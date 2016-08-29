@@ -1,4 +1,4 @@
-// Read a document from the database.
+// Read a document's permissions from the database.
 // Handle the response using the Promise approach.
 
 var ml = require('marklogic');

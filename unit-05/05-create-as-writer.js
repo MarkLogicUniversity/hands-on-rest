@@ -1,4 +1,5 @@
-// Create the users that will be used for this unit.
+// Attempt to create a user without having permission to do so.
+//
 // Promisify has some trouble with request's erorr handling, so we're using
 // a callback here.
 

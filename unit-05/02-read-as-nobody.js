@@ -1,6 +1,6 @@
 // Read a document from the database.
 //
-// The hon-reader user has no roles, and so does not have permission to read
+// The hon-nobody user has no roles, and so does not have permission to read
 // the document.
 
 var ml = require('marklogic');
