@@ -1,0 +1,234 @@
+<export><workspace name="rest-security"><query name="Create users" focus="true" active="true" content-source="as:14059653400360071881:" mode="javascript">// Create the users that will be used for this unit.
+//
+// http://docs.marklogic.com/REST/POST/manage/v2/users
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+var nobodyUser = {
+  "user-name": "hands-on-nobody",
+  "password": "nobodyPass",
+  "description": "A user who can't read anything"
+};
+
+var readerUser = {
+  "user-name": "hands-on-reader",
+  "password": "readerPass",
+  "description": "A user who can read through the REST API",
+  "role": ["rest-reader"]
+};
+
+var writerUser = {
+  "user-name": "hands-on-writer",
+  "password": "writerPass",
+  "description": "A user who can write through the REST API",
+  "role": ["rest-writer"]
+};
+
+var adminUser = {
+  "user-name": "hands-on-admin",
+  "password": "adminPass",
+  "description": "A user who can administer through the REST API",
+  "role": ["rest-admin", "security", "manage-admin"]
+};
+
+
+function createUser(user) {
+  var response = xdmp.httpPost(
+    'http://localhost:8002/manage/v2/users',
+    commonOptions,
+    user
+  );
+
+  var headers = response.next().value;
+
+  if (headers.code !== 201) {
+    fn.error(xs.QName('create-user'), 'Failed to create user ' + user['user-name'] + ': ' + JSON.stringify(headers));
+  }
+
+}
+
+createUser(nobodyUser);
+createUser(readerUser);
+createUser(writerUser);
+createUser(adminUser);
+</query><query name="role info" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Get information about a role
+// http://docs.marklogic.com/REST/GET/manage/v2/roles/[id-or-name]
+
+var targetRole = 'rest-writer';
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-admin",
+      "password" : "adminPass"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+xdmp.httpGet(
+  'http://localhost:8002/manage/v2/roles/' + targetRole,
+  commonOptions
+);
+</query><query name="read as nobody" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document from the database.
+//
+// The hands-on-nobody user has no roles, and so does not have permission to read
+// the document.
+//
+// http://docs.marklogic.com/REST/GET/v1/documents
+
+var jsonURI = '/image/01.JPG.json';
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-nobody",
+      "password" : "nobodyPass"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=' + jsonURI,
+  commonOptions
+);</query><query name="read as reader" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document from the database.
+//
+// hands-on-reader has the 'rest-reader' role, which does have permission to read
+// the document. Why? Because when a document is inserted through the REST API,
+// rest-reader is given 'read' and rest-writer is given 'update'.
+//
+// http://docs.marklogic.com/REST/GET/v1/documents
+
+var jsonURI = '/image/01.JPG.json';
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-reader",
+      "password" : "readerPass"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=' + jsonURI,
+  commonOptions
+);</query><query name="get permissions" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document's permissions from the database.
+// http://docs.marklogic.com/REST/GET/v1/documents
+
+var jsonURI = '/image/01.JPG.json';
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-reader",
+      "password" : "readerPass"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=' + jsonURI + '&amp;category=permissions',
+  commonOptions
+);
+</query><query name="create as writer" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Attempt to create a user without having permission to do so
+//
+// http://docs.marklogic.com/REST/POST/manage/v2/users
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-writer",
+      "password" : "writerPass"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+var failUser = {
+  "user-name": "hands-on-fail",
+  "password": "failPass",
+  "description": "This will not work"
+};
+
+function createUser(user) {
+  var response = xdmp.httpPost(
+    'http://localhost:8002/manage/v2/users',
+    commonOptions,
+    user
+  );
+
+  var headers = response.next().value;
+
+  if (headers.code !== 201) {
+    fn.error(xs.QName('create-user'), 'Failed to create user ' + user['user-name'] + ': ' + JSON.stringify(headers));
+  }
+
+}
+
+createUser(failUser);
+</query><query name="remove users" focus="false" active="false" content-source="as:14059653400360071881:" mode="javascript">// remove the users created for this unit
+//
+// http://docs.marklogic.com/REST/DELETE/manage/v2/users/[id-or-name]
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "admin",
+      "password" : "admin"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  };
+
+function deleteUser(username) {
+  var response = xdmp.httpDelete(
+    'http://localhost:8002/manage/v2/users/' + username,
+    commonOptions
+  );
+
+  var headers = response.next().value;
+
+  if (headers.code !== 204) {
+    fn.error(xs.QName('delete-user'), 'Failed to delete user ' + username + ': ' + JSON.stringify(headers));
+  }
+
+}
+
+deleteUser('hands-on-nobody');
+deleteUser('hands-on-reader');
+deleteUser('hands-on-writer');
+deleteUser('hands-on-admin');
+</query></workspace></export>
