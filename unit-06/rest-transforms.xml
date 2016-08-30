@@ -1,0 +1,116 @@
+<export><workspace name="rest-transforms"><query name="install a read transform" focus="true" active="true" content-source="as:8913582858034499652:" mode="javascript">// Install the add-image-size transform.
+//
+// The transform is written in JavaScript.
+// Note the .sjs file extension. In MarkLogic, we can have Server-side JavaScript (sjs)
+// and we can host client-side JavaScript (js). MarkLogic decides what to do with each
+// based on the mimetypes. By default:
+// js: application/javascript
+// sjs: application/vnd.marklogic-javascript
+//
+// Writing transformations: http://docs.marklogic.com/guide/rest-dev/transforms#id_63592
+// Installing transformations: http://docs.marklogic.com/REST/PUT/v1/config/transforms/[name]
+
+// TODO: change this to your directory
+var projectDirectory = '/Users/dcassel/git/hands-on-rest/unit-06/';
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-admin",
+      "password" : "adminPass"
+    },
+    "headers": {
+      "Content-Type": "application/vnd.marklogic-javascript",
+      "Accept": "application/json"
+    }
+  };
+
+function readModule(path) {
+  var nb = new NodeBuilder();
+  nb.addText(xdmp.filesystemFile(path));
+  return nb.toNode();
+}
+
+var addImageSize = readModule(projectDirectory + 'add-image-size.sjs');
+
+var params =
+  fn.stringJoin(
+    [
+      'title=' + encodeURIComponent('Add Image Size'),
+      'description=' + encodeURIComponent('Supplements a document read with the size of the related binary document')
+    ],
+    '&amp;'
+  );
+
+var response = xdmp.httpPut(
+  'http://localhost:5003/v1/config/transforms/add-image-size?' + params,
+  commonOptions,
+  addImageSize
+);
+
+response
+</query><query name="discover transforms" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Discover what transforms are available
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-reader",
+      "password" : "readerPass"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  };
+
+xdmp.httpGet(
+  'http://localhost:5003/v1/config/transforms',
+  commonOptions
+);
+</query><query name="use a read transform" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Read a document from the database. Apply the add-image-size tranform during
+// the document read. This will supplement the document contents with
+// additional data.
+
+var jsonURI = '/image/01.JPG.json';
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-reader",
+      "password" : "readerPass"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  };
+
+xdmp.httpGet(
+  'http://localhost:5003/v1/documents?uri=' + jsonURI + '&amp;transform=add-image-size',
+  commonOptions
+);
+</query><query name="ex 1" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Edit unit-06/add-image-size.sjs
+// Modify it to handle search transforms, as well as read transforms.
+// Work where it says "EX 1 -- work here"
+// Make the same change for searches -- add the binary size to each search result
+//
+// You can use xdmp.log() to examine the data that come in.
+</query><query name="ex 2" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Use the new transform with a search. Use xdmp.httpGet to call the /v1/search endpoint.
+// Keep the search simple: "apple".
+//
+// http://docs.marklogic.com/REST/GET/v1/search
+
+var commonOptions =
+  {
+    "authentication": {
+      "method" : "digest",
+      "username" : "hands-on-reader",
+      "password" : "readerPass"
+    },
+    "headers": {
+      "Accept": "application/json"
+    }
+  };
+
+</query></workspace></export>
