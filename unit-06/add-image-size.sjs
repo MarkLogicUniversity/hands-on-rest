@@ -1,19 +1,43 @@
 // Document-read transformation to add the size of the binary image.
 
-function addImageSize(context, params, content)
-{
-  // content is the document that has been read.
-  // Turn it into a JS object
-  var mutableDoc = content.toObject();
-  // Look up the URI of the associated binary document
-  var binaryURI = mutableDoc.binary;
+function getBinarySize(jsonDoc) {
+  var binaryURI = jsonDoc.binary;
   // Retrieve the binary document
   var binaryDoc = cts.doc(binaryURI);
-  // Find and record the size of the binary (in bytes)
-  mutableDoc.binarySize = xdmp.binarySize(binaryDoc.root);
+  return xdmp.binarySize(binaryDoc.root);
+}
 
-  // Return the revised data
-  return mutableDoc;
+function addImageSize(context, params, content)
+{
+  if (context.inputType.search('json') >= 0) {
+      // Turn it into a JS object
+    var mutableDoc = content.toObject();
+
+    if (mutableDoc.hasOwnProperty('snippet-format')) {
+      // This is a full search result
+
+      for (var i in mutableDoc.results) {
+        var jsonURI = mutableDoc.results[i].uri;
+        // retrieve the JSON document
+        var jsonDoc = cts.doc(jsonURI).root;
+        mutableDoc.results[i].binarySize = getBinarySize(jsonDoc);
+      }
+
+      return mutableDoc;
+
+    } else {
+      // This is one document
+
+      // Find and record the size of the binary (in bytes)
+      mutableDoc.binarySize = getBinarySize(mutableDoc);
+
+      // Return the revised data
+      return mutableDoc;
+    }
+  }
+
+  return content;
+
 }
 
 exports.transform = addImageSize;
