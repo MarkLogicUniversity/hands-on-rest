@@ -14,5 +14,5 @@ transform, deploy it, and make use of it during a search.
 
 ## Additional Resources
 
-- Guide: [Working with Content Transformations](http://docs.marklogic.com/guide/node-dev/extensions#id_78179)
-- Guide: [Error Reporting in Extensions and Transformations](http://docs.marklogic.com/guide/node-dev/extensions#id_19650)
+- Guide: [Working with Content Transformations](http://docs.marklogic.com/guide/rest-dev/transforms#chapter)
+- Guide: [Error Reporting in Extensions and Transformations](http://docs.marklogic.com/guide/rest-dev/transforms#id_50497)

@@ -14,5 +14,5 @@ content.
 
 ## Additional Resources
 
-- Guide: [Querying Documents and Metadata](http://docs.marklogic.com/guide/node-dev/search)
-- API Documentation: [QueryBuilder]](http://docs.marklogic.com/jsdoc/queryBuilder.html)
+- Guide: [Using and Configuring Query Features](http://docs.marklogic.com/guide/rest-dev/search)
+- API Documentation: [REST API Search](http://docs.marklogic.com/REST/client/search)

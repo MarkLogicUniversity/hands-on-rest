@@ -5,5 +5,5 @@ four provided methods of handling the results.
 
 ## Additional resources
 
-- Guide: [Reading Documents from the Database](http://docs.marklogic.com/guide/node-dev/documents#id_54976)
-- [API Documentation](http://docs.marklogic.com/jsdoc/documents.html#read)
+- Guide: [Retrieving Documents from the Database](http://docs.marklogic.com/guide/rest-dev/documents#id_80116)
+- [API Documentation](http://docs.marklogic.com/REST/GET/v1/documents)
