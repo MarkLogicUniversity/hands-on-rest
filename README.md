@@ -68,6 +68,7 @@ Trace the steps of editing the title of an image.
 
 - MarkLogic University has an instructor-led course on [using MarkLogic with the
 Node.js Client API][mlu-ilt-node]
+- A version of the [Hands-on REST slide deck](https://developer.marklogic.com/media/workshops/hands-on-rest.pdf) is available
 
 [geophoto]: https://github.com/marklogic/Geophoto
 [mlu-geophoto]: http://mlu.marklogic.com/ondemand/aa767d01
