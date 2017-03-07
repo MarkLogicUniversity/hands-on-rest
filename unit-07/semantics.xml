@@ -1,0 +1,115 @@
+<export><workspace name="Workspace"><query name="1 select US" focus="true" active="true" content-source="as:597104700950068148:" mode="sparql"># select all triples where the United States is the subject
+
+select ?s ?p ?o
+where {
+  &lt;http://dbpedia.org/resource/United_States&gt; ?p ?o
+}</query><query name="2 distinct predicates" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># select all distinct predicates
+
+select distinct ?p
+{
+  ?s ?p ?o
+}</query><query name="3 select a doc" focus="false" active="true" content-source="as:597104700950068148:" mode="javascript">fn.doc('/image/01.JPG.json')</query><query name="4 doc to country" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># from document to country
+PREFIX dbr: &lt;http://dbpedia.org/resource/&gt;
+
+select *
+{
+  &lt;/image/01.JPG.json&gt; &lt;takenIn&gt; ?country .
+  ?country ?s ?o
+}</query><query name="5 country to docs" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># from country to documents
+PREFIX dbr: &lt;http://dbpedia.org/resource/&gt;
+
+select *
+{
+  ?docURI &lt;takenIn&gt; &lt;http://dbpedia.org/resource/United_States&gt; .
+}</query><query name="6 list continents" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># show a list of continent names
+select distinct ?continentLabel
+{
+  ?countryIRI &lt;http://dbpedia.org/property/continent&gt; ?continentIRI .
+  ?continentIRI &lt;http://www.w3.org/2004/02/skos/core#prefLabel&gt; ?continentLabel
+}
+</query><query name="7 list countries by continent" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># show a list of countries within a continent
+# Assume that "Countries in North America"@en has been chosen. You now want to retrieve the labels
+# for countries in that continent.
+#
+# You can use triples of this form:
+#   s: continentIRI p: &lt;http://www.w3.org/2004/02/skos/core#prefLabel&gt; o: "Countries in North America"@en
+#   s: countryIRI p: &lt;http://dbpedia.org/property/continent&gt; o: continentIRI
+#   s: countryIRI p: &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; o: country label
+</query><query name="7b (answer)" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># show a list of countries within a continent
+# Assume that "Countries in North America"@en has been chosen. You now want to retrieve the labels
+# for countries in that continent.
+
+select ?countryIRI ?countryLabel
+{
+  ?continentIRI &lt;http://www.w3.org/2004/02/skos/core#prefLabel&gt; "Countries in North America"@en .
+  ?countryIRI &lt;http://dbpedia.org/property/continent&gt; ?continentIRI ;
+              &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; ?countryLabel .
+}
+</query><query name="load module" focus="false" active="false" content-source="7444838409788728748:0:Apps" mode="xquery">xquery version "1.0-ml";
+
+if (xdmp:database-name(xdmp:database()) != "geophoto-modules") then
+  fn:error("Set the Content Source to geophoto-modules")
+else (),
+
+xdmp:document-load(
+  "/mnt/dcassel/git/hands-on-rest/unit-07/continent.xqy",
+  map:new((
+    map:entry("uri", "/lib/continent.xqy")
+  ))
+)
+</query><query name="continent query" focus="false" active="false" content-source="as:597104700950068148:" mode="xquery">xquery version "1.0-ml";
+
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
+
+declare function local:get-countries-by-continent($continent) as xs:string*
+{
+  let $continent := rdf:langString($continent, "en")
+  let $sparql-q :=
+    'PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; ' ||
+    'PREFIX dbp: &lt;http://dbpedia.org/property/&gt; ' ||
+    'PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; ' ||
+    'select ?countryLabel ' ||
+    'where { ' ||
+    '  ?continent skos:prefLabel "Countries in North America"@en . ' ||
+    '  ?country dbp:continent ?continent ; ' ||
+    '    rdfs:label ?countryLabel ' ||
+    '}'
+  let $countries :=
+    sem:sparql(
+      $sparql-q,
+      map:new((
+        map:entry("contLabel", $continent)
+      ))
+    )
+  for $country in $countries
+  return map:get($country, "countryLabel")
+};
+
+&lt;r&gt;{
+  cts:element-value-query(
+    xs:QName("country"),
+    local:get-countries-by-continent("Countries in North America")
+  )
+}&lt;/r&gt;/*</query><query name="run search" focus="false" active="false" content-source="as:597104700950068148:" mode="xquery">xdmp:http-post(
+  'http://localhost:8010/v1/search?collection=image',
+  &lt;options xmlns="xdmp:http"&gt;
+    &lt;authentication&gt;
+      &lt;username&gt;admin&lt;/username&gt;
+      &lt;password&gt;admin&lt;/password&gt;
+    &lt;/authentication&gt;
+    &lt;headers&gt;
+      &lt;content-type&gt;application/xml&lt;/content-type&gt;
+    &lt;/headers&gt;
+  &lt;/options&gt;,
+  &lt;search xmlns="http://marklogic.com/appservices/search"&gt;
+    &lt;qtext&gt;cont:"Countries in North America"&lt;/qtext&gt;
+    &lt;options&gt;
+      &lt;constraint name="cont"&gt;
+        &lt;custom facet="false"&gt;
+          &lt;parse apply="parse" ns="http://geophoto/continent" at="/lib/continent.xqy" /&gt;
+        &lt;/custom&gt;
+      &lt;/constraint&gt;
+      &lt;return-query&gt;true&lt;/return-query&gt;
+    &lt;/options&gt;
+  &lt;/search&gt;
+)</query></workspace></export>
