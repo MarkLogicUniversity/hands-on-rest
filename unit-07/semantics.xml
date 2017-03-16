@@ -1,6 +1,6 @@
 <export><workspace name="Semantics"><query name="1 select US" focus="true" active="true" content-source="as:597104700950068148:" mode="sparql"># select all triples where the United States is the subject
 
-select ?s ?p ?o
+select ?p ?o
 where {
   &lt;http://dbpedia.org/resource/United_States&gt; ?p ?o
 }</query><query name="2 distinct predicates" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># select all distinct predicates
@@ -11,14 +11,14 @@ select distinct ?p
 }</query><query name="3 select a doc" focus="false" active="true" content-source="as:597104700950068148:" mode="javascript">fn.doc('/image/01.JPG.json')</query><query name="4 doc to country" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># from document to country
 PREFIX dbr: &lt;http://dbpedia.org/resource/&gt;
 
-select *
+select ?country ?p ?o
 {
   &lt;/image/01.JPG.json&gt; &lt;takenIn&gt; ?country .
-  ?country ?s ?o
+  ?country ?p ?o
 }</query><query name="5 country to docs" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># from country to documents
 PREFIX dbr: &lt;http://dbpedia.org/resource/&gt;
 
-select *
+select ?docURI
 {
   ?docURI &lt;takenIn&gt; &lt;http://dbpedia.org/resource/United_States&gt; .
 }</query><query name="6 list continents" focus="false" active="true" content-source="as:597104700950068148:" mode="sparql"># show a list of continent names
