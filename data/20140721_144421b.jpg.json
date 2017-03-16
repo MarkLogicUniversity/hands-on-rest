@@ -13,5 +13,14 @@
     ],
     "city": "Cape Elizabeth",
     "country": "United States"
-  }
+  },
+  "triples": [
+    {
+      "triple": {
+        "subject": "/image/IMG_0169.JPG.json",
+        "predicate": "takenIn",
+        "object": "http://dbpedia.org/resource/United_States"
+      }
+    }
+  ]
 }
