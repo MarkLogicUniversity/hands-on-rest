@@ -12,11 +12,10 @@ var response = xdmp.httpGet(
   }
 );
 
-var headers = response.next();
-var content = response.next();
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response
-</query><query name="Read Binary" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document
+response</query><query name="Read Binary" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document
 // This script sends a GET request to retrieve a particular document.
 
 var response = xdmp.httpGet(
@@ -30,8 +29,8 @@ var response = xdmp.httpGet(
   }
 );
 
-var headers = response.next();
-var content = response.next();
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Read multiple" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document
 // This script sends a GET request to retrieve multiple documents.
@@ -50,13 +49,15 @@ var response = xdmp.httpGet(
   }
 );
 
-var headers = response.next();
-var content = response.next();
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-String(content.value);
+String(content)
 </query><query name="Ex 1" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Task: Print the city where image 03.JPG was taken.
 //       Use the Promise method.
 // URI: /image/03.JPG.json
 // JSON path within document: location.city
+// Note that the JSON content we get back from xdmp.httpGet is a document node.
+// You can get to a JavaScript object like this: content.root
 
 </query></workspace></export>

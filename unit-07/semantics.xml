@@ -69,7 +69,7 @@ xdmp:document-load(
     &lt;/headers&gt;
   &lt;/options&gt;,
   &lt;search xmlns="http://marklogic.com/appservices/search"&gt;
-    &lt;qtext&gt;cont:"Countries in Africa"&lt;/qtext&gt;
+    &lt;qtext&gt;cont:"Countries in North America"&lt;/qtext&gt;
     &lt;options&gt;
       &lt;constraint name="cont"&gt;
         &lt;custom facet="false"&gt;
@@ -84,7 +84,7 @@ xdmp:document-load(
       &lt;return-query&gt;true&lt;/return-query&gt;
     &lt;/options&gt;
   &lt;/search&gt;
-)</query><query name="clear triples" focus="false" active="true" content-source="as:597104700950068148:" mode="xquery">xquery version "1.0-ml";
+)</query><query name="clear triples" focus="false" active="false" content-source="as:597104700950068148:" mode="xquery">xquery version "1.0-ml";
 
 xdmp:collection-delete('http://marklogic.com/semantics/countries')
 </query></workspace></export>

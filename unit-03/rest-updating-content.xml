@@ -25,8 +25,8 @@ var response = xdmp.httpPut(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Delete" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Delete a document
 
@@ -47,12 +47,12 @@ var response = xdmp.httpDelete(
   options
 )
 
-response</query><query name="Insert Multiple" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Insert multiple documents
+response</query><query name="Insert Multiple" focus="false" active="true" content-source="as:597104700950068148:" mode="javascript">// Insert multiple documents
 
-var projectDirectory = '/Users/dcassel/git/hands-on-rest/data/';
+var projectDirectory = '/mnt/dcassel/git/hands-on-rest/data/';
 
-var jsonDoc = xdmp.documentGet(projectDirectory + '20140721_144421b.jpg.json').next().value.root;
-var jpegDoc = xdmp.documentGet(projectDirectory + '20140721_144421b.jpg').next().value.root;
+var jsonDoc = fn.head(xdmp.documentGet(projectDirectory + '20140721_144421b.jpg.json')).root;
+var jpegDoc = fn.head(xdmp.documentGet(projectDirectory + '20140721_144421b.jpg')).root;
 
 var encoding =
   xdmp.multipartEncode(
@@ -91,12 +91,12 @@ var options =
   };
 
 var response = xdmp.httpPost(
-  'http://localhost:8000/v1/documents',
+  'http://localhost:8010/v1/documents',
   options,
   encoding
 )
 
-response</query><query name="Update Content" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Update a document -- insert a "state" property after /location/city
+response</query><query name="Update Content" focus="false" active="true" content-source="as:597104700950068148:" mode="javascript">// Update a document -- insert a "state" property after /location/city
 // See JSON Patch reference: http://docs.marklogic.com/guide/rest-dev/documents#id_84854
 //
 // Note that there is no xdmp.httpPatch(), so we're calling xdmp.httpPost() and sending
@@ -107,11 +107,13 @@ response</query><query name="Update Content" focus="false" active="true" content
 
 var patch =
   {
-    "insert": {
-      "context": "/location/city",
-      "position": "after",
-      "content": { state: 'Maine' }
-    }
+    "patch": [
+      { "insert": {
+        "context": "/location/city",
+        "position": "after",
+        "content": { state: 'Maine' }
+      }}
+    ]
   };
 
 var options =
@@ -134,8 +136,8 @@ var response = xdmp.httpPost(
   patch
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Read Metadata" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Lookup collections, permissions, properties, and quality for a document
 
@@ -156,8 +158,8 @@ var response = xdmp.httpGet(
   options
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Update Metadata" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Add a document to a collection
 
@@ -188,8 +190,8 @@ var response = xdmp.httpPut(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Ex 1" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Exercise:
 // Rerun the Insert buffer before doing this exercise.
@@ -244,8 +246,8 @@ var response = xdmp.httpPost(
   patch
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Ex 2" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Exercise:
 //
@@ -299,8 +301,8 @@ var response = xdmp.httpPost(
   patch
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query><query name="Ex 3" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Exercise:
 // Rerun the Update Metadata buffer before doing this exercise.
@@ -333,7 +335,7 @@ var response = xdmp.httpPut(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
 response</query></workspace></export>

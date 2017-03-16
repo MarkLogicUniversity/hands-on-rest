@@ -50,7 +50,7 @@ function createUser(user) {
     user
   );
 
-  var headers = response.next().value;
+  var headers = fn.head(response);
 
   if (headers.code !== 201) {
     fn.error(xs.QName('create-user'), 'Failed to create user ' + user['user-name'] + ': ' + JSON.stringify(headers));
@@ -219,7 +219,7 @@ function deleteUser(username) {
     commonOptions
   );
 
-  var headers = response.next().value;
+  var headers = fn.head(response);
 
   if (headers.code !== 204) {
     fn.error(xs.QName('delete-user'), 'Failed to delete user ' + username + ': ' + JSON.stringify(headers));

@@ -20,8 +20,8 @@ var commonOptions =
 var projectDirectory = '/Users/dcassel/git/hands-on-rest/data/';
 
 // Note that these two documents will be inserted using a single request, and therefore a single transaction
-var jsonDoc = xdmp.documentGet(projectDirectory + '20140721_144421b.jpg.json').next().value.root;
-var jpegDoc = xdmp.documentGet(projectDirectory + '20140721_144421b.jpg').next().value.root;
+var jsonDoc = fn.head(xdmp.documentGet(projectDirectory + '20140721_144421b.jpg.json')).root;
+var jpegDoc = fn.head(xdmp.documentGet(projectDirectory + '20140721_144421b.jpg')).root;
 var jsonURI = '/image/20140721_144421b.jpg.json';
 
 var encoding = 
@@ -60,7 +60,7 @@ var response = xdmp.httpPost(
   encoding
 )
 
-headers = response.next().value;
+headers = fn.head(response);
 
 if (headers.code !== 200) {
   fn.error(xs.QName('upload-failed'))
@@ -88,7 +88,7 @@ response = xdmp.httpPost(
   patch
 )
 
-headers = response.next().value;
+headers = fn.head(response);
 
 if (headers.code !== 204) {
   fn.error(xs.QName('add-state-failed'), "failed to add the state", headers)
@@ -103,8 +103,8 @@ response = xdmp.httpGet(
   commonOptions
 );
 
-headers = response.next().value;
-content = response.next().value;
+headers = fn.head(response);
+content = fn.head(fn.tail(response));
 
 if (headers.code !== 200) {
   fn.error(xs.QName('get-document'), "failed to retrieve document", headers)
@@ -146,7 +146,7 @@ var response = xdmp.httpPost(
   commonOptions
 );
 
-headers = response.next().value;
+headers = fn.head(response);
 
 if (headers.code !== 303) {
   fn.error(xs.QName('create-transaction'), "failed to create a transaction", headers)
@@ -164,8 +164,8 @@ try {
     commonOptions
   );
 
-  headers = response.next().value;
-  jsonContent = response.next().value;
+  headers = fn.head(response);
+  jsonContent = fn.head(fn.tail(response));
 
   if (headers.code !== 200) {
     fn.error(xs.QName('get-document'), "failed to retrieve JSON document", headers)
@@ -182,8 +182,8 @@ try {
     commonOptions
   );
 
-  headers = response.next().value;
-  imgContent = response.next().value;
+  headers = fn.head(response);
+  imgContent = fn.head(fn.tail(response));
 
   if (headers.code !== 200) {
     fn.error(xs.QName('get-document'), "failed to retrieve image document from " + origImgURI, headers);
@@ -204,7 +204,7 @@ try {
     imgContent
   );
 
-  headers = response.next().value;
+  headers = fn.head(response);
 
   if (headers.code !== 201) {
     fn.error(xs.QName('put-image-document'), "failed to load the image document to " + updatedImgURI, headers);
@@ -219,7 +219,7 @@ try {
     commonOptions
   );
 
-  headers = response.next().value;
+  headers = fn.head(response);
 
   if (headers.code !== 204) {
     fn.error(xs.QName('delete-image-document'), "failed to delete the image document from " + origImgURI, headers);
@@ -250,7 +250,7 @@ try {
     patch
   )
 
-  headers = response.next().value;
+  headers = fn.head(response);
 
   if (headers.code !== 204) {
     fn.error(xs.QName('update-json-doc'), "failed to update the JSON document", headers);
@@ -265,7 +265,7 @@ try {
     commonOptions
   );
 
-  headers = response.next().value;
+  headers = fn.head(response);
 
   response
 
@@ -284,7 +284,7 @@ try {
 }
 
 response
-</query><query name="reset for multistatement" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">
+</query><query name="reset for multistatement" focus="false" active="true" content-source="as:597104700950068148:" mode="javascript">
 declareUpdate();
 
 if (fn.docAvailable('/binary/01.jpg')) {
@@ -303,7 +303,7 @@ if (fn.docAvailable('/binary/01.jpg')) {
 var jsonURI = '/image/01.JPG.json';
 var jsonDoc = fn.doc(jsonURI);
 
-var docObj = jsonDoc.next().value.toObject();
+var docObj = fn.head(jsonDoc).toObject();
 if (docObj.binary === '/binary/01.jpg') {
   docObj.binary = '/binary/01.JPG';
   xdmp.documentInsert(

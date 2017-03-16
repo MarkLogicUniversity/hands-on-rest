@@ -14,10 +14,10 @@ var response = xdmp.httpGet(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="phrase search" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain the phrase 'iphone 4'.
+content.root</query><query name="phrase search" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain the phrase 'iphone 4'.
 
 var query = encodeURI('"iphone 4"');
 
@@ -35,10 +35,10 @@ var response = xdmp.httpGet(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="string logical search" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain either "atlanta" or the phrase "san francisco".
+content.root</query><query name="string logical search" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain either "atlanta" or the phrase "san francisco".
 // The "OR" needs to be all caps to be interpreted as a logical or. 
 
 var query = encodeURI('atlanta OR "san francisco"');
@@ -57,10 +57,10 @@ var response = xdmp.httpGet(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="paging" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Get the second page of documents that contain the term "apple"
+content.root</query><query name="paging" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Get the second page of documents that contain the term "apple"
 
 var query = encodeURI('apple');
 
@@ -78,10 +78,10 @@ var response = xdmp.httpGet(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="constraint search" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that contain have a city property with the value "San Francisco"
+content.root</query><query name="constraint search" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that contain have a city property with the value "San Francisco"
 
 var query = 'metro:"San Francisco"'
 
@@ -117,10 +117,10 @@ var response = xdmp.httpPost(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="facet search" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that contain have the term apple. 
+content.root</query><query name="facet search" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that contain have the term apple. 
 // Return a country facet. 
 
 var query = 'apple'
@@ -159,10 +159,10 @@ var response = xdmp.httpPost(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="structured query" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Use a structured query with a term-query and a value-query. 
+content.root</query><query name="structured query" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Use a structured query with a term-query and a value-query. 
 
 var response = xdmp.httpPost(
   'http://localhost:8010/v1/search',
@@ -199,10 +199,10 @@ var response = xdmp.httpPost(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="qbe" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that have 'San Francisco' in the city property, using
+content.root</query><query name="qbe" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Search for documents that have 'San Francisco' in the city property, using
 // Query-By-Example.
 
 // Other QBE tricks:
@@ -237,10 +237,10 @@ var response = xdmp.httpPost(
   }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query><query name="ex 1" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Write a query that finds pictures taken with "LGE" phones in Colombia.
+content.root</query><query name="ex 1" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Write a query that finds pictures taken with "LGE" phones in Colombia.
 // Hint: you'll look in the "make" and "country" JSON properties.
 
 var endpoint = ''; // choose a search endpoint
@@ -258,10 +258,12 @@ var response = xdmp.httpPost(
       "Accept": "application/json"
     }
   },
-  // add query here
+  {
+    // add query here
+  }
 )
 
-headers = response.next().value
-content = response.next().value
+var headers = fn.head(response);
+var content = fn.head(fn.tail(response));
 
-response</query></workspace></export>
+content.root</query></workspace></export>
