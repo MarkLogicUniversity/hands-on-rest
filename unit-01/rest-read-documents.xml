@@ -2,7 +2,7 @@
 // This script sends a GET request to retrieve a particular document.
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=/image/01.JPG.json',
+  'http://localhost:8010/v1/documents?uri=/image/01.JPG.json',
   {
     "authentication": {
       "method" : "digest",
@@ -20,7 +20,7 @@ response
 // This script sends a GET request to retrieve a particular document.
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=/binary/01.JPG',
+  'http://localhost:8010/v1/documents?uri=/binary/01.JPG',
   {
     "authentication": {
       "method" : "digest",
@@ -37,7 +37,7 @@ response</query><query name="Read multiple" focus="false" active="true" content-
 // This script sends a GET request to retrieve multiple documents.
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=/image/01.JPG.json&amp;uri=/image/02.JPG.json',
+  'http://localhost:8010/v1/documents?uri=/image/01.JPG.json&amp;uri=/image/02.JPG.json',
   {
     "authentication": {
       "method" : "digest",

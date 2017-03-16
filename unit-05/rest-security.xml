@@ -107,7 +107,7 @@ var commonOptions =
   };
 
 xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=' + jsonURI,
+  'http://localhost:8010/v1/documents?uri=' + jsonURI,
   commonOptions
 );</query><query name="read as reader" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document from the database.
 //
@@ -133,7 +133,7 @@ var commonOptions =
   };
 
 xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=' + jsonURI,
+  'http://localhost:8010/v1/documents?uri=' + jsonURI,
   commonOptions
 );</query><query name="get permissions" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Read a document's permissions from the database.
 // http://docs.marklogic.com/REST/GET/v1/documents
@@ -154,7 +154,7 @@ var commonOptions =
   };
 
 xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=' + jsonURI + '&amp;category=permissions',
+  'http://localhost:8010/v1/documents?uri=' + jsonURI + '&amp;category=permissions',
   commonOptions
 );
 </query><query name="create as writer" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Attempt to create a user without having permission to do so

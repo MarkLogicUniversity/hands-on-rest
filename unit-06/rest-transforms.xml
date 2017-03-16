@@ -44,7 +44,7 @@ var params =
   );
 
 var response = xdmp.httpPut(
-  'http://localhost:5003/v1/config/transforms/add-image-size?' + params,
+  'http://localhost:8010/v1/config/transforms/add-image-size?' + params,
   commonOptions,
   addImageSize
 );
@@ -65,7 +65,7 @@ var commonOptions =
   };
 
 xdmp.httpGet(
-  'http://localhost:5003/v1/config/transforms',
+  'http://localhost:8010/v1/config/transforms',
   commonOptions
 );
 </query><query name="use a read transform" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Read a document from the database. Apply the add-image-size tranform during
@@ -87,7 +87,7 @@ var commonOptions =
   };
 
 xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=' + jsonURI + '&amp;transform=add-image-size',
+  'http://localhost:8010/v1/documents?uri=' + jsonURI + '&amp;transform=add-image-size',
   commonOptions
 );
 </query><query name="ex 1" focus="false" active="true" content-source="as:8913582858034499652:" mode="javascript">// Edit unit-06/add-image-size.sjs

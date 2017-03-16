@@ -1,7 +1,7 @@
 <export><workspace name="rest-search"><query name="term search" focus="true" active="true" content-source="as:8913582858034499652:" mode="javascript">// Search for documents that contain the word 'apple'.
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/search?q=apple',
+  'http://localhost:8010/v1/search?q=apple',
   {
     "authentication": {
       "method" : "digest",
@@ -22,7 +22,7 @@ response</query><query name="phrase search" focus="false" active="true" content-
 var query = encodeURI('"iphone 4"');
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/search?q=' + query,
+  'http://localhost:8010/v1/search?q=' + query,
   {
     "authentication": {
       "method" : "digest",
@@ -44,7 +44,7 @@ response</query><query name="string logical search" focus="false" active="true" 
 var query = encodeURI('atlanta OR "san francisco"');
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/search?q=' + query,
+  'http://localhost:8010/v1/search?q=' + query,
   {
     "authentication": {
       "method" : "digest",
@@ -65,7 +65,7 @@ response</query><query name="paging" focus="false" active="true" content-source=
 var query = encodeURI('apple');
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/search?start=11&amp;q=' + query,
+  'http://localhost:8010/v1/search?start=11&amp;q=' + query,
   {
     "authentication": {
       "method" : "digest",
@@ -86,7 +86,7 @@ response</query><query name="constraint search" focus="false" active="true" cont
 var query = 'metro:"San Francisco"'
 
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/search',
+  'http://localhost:8010/v1/search',
   {
     "authentication": {
       "method" : "digest",
@@ -126,7 +126,7 @@ response</query><query name="facet search" focus="false" active="true" content-s
 var query = 'apple'
 
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/search',
+  'http://localhost:8010/v1/search',
   {
     "authentication": {
       "method" : "digest",
@@ -165,7 +165,7 @@ content = response.next().value
 response</query><query name="structured query" focus="false" active="true" content-source="as:14059653400360071881:" mode="javascript">// Use a structured query with a term-query and a value-query. 
 
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/search',
+  'http://localhost:8010/v1/search',
   {
     "authentication": {
       "method" : "digest",
@@ -218,7 +218,7 @@ response</query><query name="qbe" focus="false" active="true" content-source="as
 //   }) 
 
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/qbe',
+  'http://localhost:8010/v1/qbe',
   {
     "authentication": {
       "method" : "digest",
@@ -246,7 +246,7 @@ response</query><query name="ex 1" focus="false" active="true" content-source="a
 var endpoint = ''; // choose a search endpoint
 
 var response = xdmp.httpPost(
-  'http://localhost:5003' + endpoint,
+  'http://localhost:8010' + endpoint,
   {
     "authentication": {
       "method" : "digest",

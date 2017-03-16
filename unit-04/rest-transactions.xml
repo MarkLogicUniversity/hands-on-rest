@@ -83,7 +83,7 @@ var patchOptions = JSON.parse(JSON.stringify(commonOptions));
 patchOptions.headers["X-HTTP-Method-Override"] = "PATCH";
 
 response = xdmp.httpPost(
-  'http://localhost:5003/v1/documents?uri=' + jsonURI,
+  'http://localhost:8010/v1/documents?uri=' + jsonURI,
   patchOptions,
   patch
 )
@@ -99,7 +99,7 @@ if (headers.code !== 204) {
 //=============================================================================
 
 response = xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=' + jsonURI,
+  'http://localhost:8010/v1/documents?uri=' + jsonURI,
   commonOptions
 );
 
@@ -142,7 +142,7 @@ var commonOptions = Object.freeze(
 // STEP : Create a transaction
 //=============================================================================
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/transactions',
+  'http://localhost:8010/v1/transactions',
   commonOptions
 );
 
@@ -160,7 +160,7 @@ try {
   //=============================================================================
   xdmp.log('reading JSON');
   response = xdmp.httpGet(
-    'http://localhost:5003/v1/documents?uri=' + jsonURI + '&amp;txid=' + txId,
+    'http://localhost:8010/v1/documents?uri=' + jsonURI + '&amp;txid=' + txId,
     commonOptions
   );
 
@@ -178,7 +178,7 @@ try {
   //=============================================================================
   xdmp.log('reading binary');
   response = xdmp.httpGet(
-    'http://localhost:5003/v1/documents?uri=' + origImgURI + '&amp;txid=' + txId,
+    'http://localhost:8010/v1/documents?uri=' + origImgURI + '&amp;txid=' + txId,
     commonOptions
   );
 
@@ -199,7 +199,7 @@ try {
   imgPutOptions.headers["Content-Type"] = 'image/jpeg';
 
   response = xdmp.httpPut(
-    'http://localhost:5003/v1/documents?uri=' + updatedImgURI + '&amp;txid=' + txId,
+    'http://localhost:8010/v1/documents?uri=' + updatedImgURI + '&amp;txid=' + txId,
     imgPutOptions,
     imgContent
   );
@@ -215,7 +215,7 @@ try {
   //=============================================================================
   xdmp.log('deleting original binary');
   response = xdmp.httpDelete(
-    'http://localhost:5003/v1/documents?uri=' + origImgURI + '&amp;txid=' + txId,
+    'http://localhost:8010/v1/documents?uri=' + origImgURI + '&amp;txid=' + txId,
     commonOptions
   );
 
@@ -245,7 +245,7 @@ try {
   patchOptions.headers["X-HTTP-Method-Override"] = "PATCH";
 
   response = xdmp.httpPost(
-    'http://localhost:5003/v1/documents?uri=' + jsonURI + '&amp;txid=' + txId,
+    'http://localhost:8010/v1/documents?uri=' + jsonURI + '&amp;txid=' + txId,
     patchOptions,
     patch
   )
@@ -261,7 +261,7 @@ try {
   //=============================================================================
   xdmp.log('Committing the multi-statement transaction');
   response = xdmp.httpPost(
-    'http://localhost:5003/v1/transactions/' + txId + '?result=commit',
+    'http://localhost:8010/v1/transactions/' + txId + '?result=commit',
     commonOptions
   );
 
@@ -277,7 +277,7 @@ try {
   xdmp.log('rolling back: ' + e);
   
   response = xdmp.httpPost(
-    'http://localhost:5003/v1/transactions/' + txId + '?result=rollback',
+    'http://localhost:8010/v1/transactions/' + txId + '?result=rollback',
     commonOptions
   );
 

@@ -14,7 +14,7 @@ var options =
   };
 
 var response = xdmp.httpPut(
-  'http://localhost:5003/v1/documents?uri=/test/mydoc1.json',
+  'http://localhost:8010/v1/documents?uri=/test/mydoc1.json',
   options,
   {
     "review": {
@@ -43,7 +43,7 @@ var options =
   };
 
 var response = xdmp.httpDelete(
-  'http://localhost:5003/v1/documents?uri=/test/mydoc1.json',
+  'http://localhost:8010/v1/documents?uri=/test/mydoc1.json',
   options
 )
 
@@ -129,7 +129,7 @@ var options =
   };
 
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json',
+  'http://localhost:8010/v1/documents?uri=/image/20140721_144421b.jpg.json',
   options,
   patch
 )
@@ -152,7 +152,7 @@ var options =
   };
 
 var response = xdmp.httpGet(
-  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json&amp;category=metadata',
+  'http://localhost:8010/v1/documents?uri=/image/20140721_144421b.jpg.json&amp;category=metadata',
   options
 )
 
@@ -178,7 +178,7 @@ var options =
   };
 
 var response = xdmp.httpPut(
-  'http://localhost:5003/v1/documents?uri=' + uri + '&amp;category=' + category,
+  'http://localhost:8010/v1/documents?uri=' + uri + '&amp;category=' + category,
   options,
   {
     "collections": [
@@ -239,7 +239,7 @@ var options =
 
 var uri = '/image/20140721_144421b.jpg.json';
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json',
+  'http://localhost:8010/v1/documents?uri=/image/20140721_144421b.jpg.json',
   options,
   patch
 )
@@ -294,7 +294,7 @@ var options =
 
 var uri = '/image/20140721_144421b.jpg.json';
 var response = xdmp.httpPost(
-  'http://localhost:5003/v1/documents?uri=/image/20140721_144421b.jpg.json',
+  'http://localhost:8010/v1/documents?uri=/image/20140721_144421b.jpg.json',
   options,
   patch
 )
@@ -326,7 +326,7 @@ var options =
   };
 
 var response = xdmp.httpPut(
-  'http://localhost:5003/v1/documents?uri=' + uri + '&amp;category=' + category,
+  'http://localhost:8010/v1/documents?uri=' + uri + '&amp;category=' + category,
   options,
   {
     // SPECIFY REQUEST BODY HERE
